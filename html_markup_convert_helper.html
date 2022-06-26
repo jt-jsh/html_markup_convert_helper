@@ -8,7 +8,13 @@
     <title>html markup convert helper</title>
 
     <style>
-        #convert_html>div {
+        * { margin:0; padding:0; box-sizing: border-box; }
+
+        .wrap {max-width: 800px; padding:20px;}
+
+        #convert_html { margin-bottom:20px; }
+        #convert_html > textarea {width:100%; height:350px; resize: none; padding:20px;}
+        #convert_html > div {
             overflow: hidden;
             width: 0;
             height: 0;
@@ -16,6 +22,10 @@
             position: absolute;
             left: -9999px;
         }
+        #convert_submit { text-align: center; margin-bottom: 20px;}
+        #convert_submit button { width:100%; height:30px; vertical-align: top;}
+
+        #result_html { padding:20px; border:1px solid #ddd;}
     </style>
 
     <script>
@@ -53,7 +63,7 @@
                 var link = convert.getElementsByTagName('link')[0];
                 if (link) link.remove();
 
-                var content = convert.getElementsByTagName('table')[0];
+                var content = convert.getElementsByTagName('table')[0] || convert.children[0];
                 var map = convert.getElementsByTagName('map')[0];
 
                 var tables = content.getElementsByTagName('table');
@@ -172,25 +182,38 @@
             init();
 
         }
+
+        function handleCopyHtml(){
+            var textarea = document.createElement('textarea');
+            
+            document.body.appendChild(textarea);
+            textarea.value = document.querySelector('#result_html').innerHTML;
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            alert('Copy Success!');
+        }
     </script>
 </head>
 
 <body>
+    <div class="wrap">
+        <div id="convert_html">
+            <textarea></textarea>
+            <div>
 
-    <div id="convert_html">
-        <textarea>
-            
-        </textarea>
-        <div>
+            </div>
+        </div>
+
+        <div id="convert_submit">
+            <button onclick="HandleConvertHtml();">Start Convert</button>
+        </div>
+
+        <div id="result_html" onclick="handleCopyHtml();">
 
         </div>
     </div>
-
-    <div>
-        <button onclick="HandleConvertHtml();">Start Convert</button>
-    </div>
-
-    <div id="result_html"></div>
 </body>
 
 </html>
