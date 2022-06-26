@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>html markup convert helper</title>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var attrs = [
+                'class',
+                'id',
+
+                'style',
+                'width',
+                'height',
+
+                'border',
+                'bordercolor',
+                'cellpadding',
+                'cellspacing',
+                'rules',
+
+                'font',
+                'align',
+                'color',
+            ]
+
+            // variables
+            var elements = [];
+
+            var link = document.body.getElementsByTagName('link')[0];
+            if (link) link.remove();
+
+            var content = document.getElementsByTagName('table')[0];
+
+            var tables = content.getElementsByTagName('table');
+            var ths = content.getElementsByTagName('th');
+            var tds = content.getElementsByTagName('td');
+            var paragraphs = content.getElementsByTagName('p');
+            var spans = content.getElementsByTagName('span');
+            var strongs = content.getElementsByTagName('strong');
+            var anchors = content.getElementsByTagName('a');
+            var h1s = content.getElementsByTagName('h1');
+            var h2s = content.getElementsByTagName('h2');
+            var h3s = content.getElementsByTagName('h3');
+
+            // extract pattern
+            var ext_span_pattern = /<(\/span|span)([^>]*)>/gi;
+            var ext_span_replace = '';
+            var ext_strong_pattern = /<(\/strong|strong)([^>]*)>/gi;
+            var ext_strong_replace = '';
+            var ext_h1_pattern = /h1>/gi;
+            var ext_h1_replace = 'h2>';
+
+            // function
+            function handlePushElements(nodes) {
+                Array.prototype.forEach.call(nodes, function (node) {
+                    elements.push(node);
+                });
+            }
+
+            function handleTitleTrim(titles) {
+                Array.prototype.forEach.call(titles, function (title) {
+                    title.innerHTML = title.innerHTML.trim();
+                });
+            }
+
+            function handleExtPattern(html, pattern, replace) {
+                return html.replace(pattern, replace);
+            }
+
+            // init 
+            handlePushElements(tables);
+            handlePushElements(ths);
+            handlePushElements(tds);
+            handlePushElements(paragraphs);
+            handlePushElements(spans);
+            handlePushElements(strongs);
+            handlePushElements(anchors);
+            handlePushElements(h1s);
+            handlePushElements(h2s);
+            handlePushElements(h3s);
+
+            // tag inline trim
+            handleTitleTrim(paragraphs);
+            handleTitleTrim(h1s);
+            handleTitleTrim(h2s);
+            handleTitleTrim(h3s);
+
+            // delete attribute
+            Array.prototype.forEach.call(elements, function (element) {
+                Array.prototype.forEach.call(attrs, function (attr) {
+
+                    element.removeAttribute(attr);
+
+                    // delete title tag (h1, h2, h3) inline strong tag
+                    if (
+                        element.tagName == 'H1'
+                        || element.tagName == 'H2'
+                        || element.tagName == 'H3'
+                    ) {
+                        element.innerHTML = handleExtPattern(element.innerHTML, ext_strong_pattern, ext_strong_replace);
+                    }
+                });
+            });
+
+            // delete table caption tag
+            Array.prototype.forEach.call(tables, function (table) {
+                var captions = table.getElementsByTagName('caption');
+                if (captions.length > 0) {
+                    Array.prototype.forEach.call(captions, function (caption) {
+                        caption.remove();
+                    });
+                }
+            });
+
+
+            // line clean up
+            var lines = document.body.querySelectorAll('body > table > tbody > tr > td');
+            var filterLines = [];
+            var html = '';
+
+            Array.prototype.forEach.call(lines, function (line) {
+                line.innerHTML = line.innerHTML.trim();
+
+                if (line.innerHTML != '&nbsp;' && line.innerHTML != '<p>&nbsp;</p>') {
+                    if (line.innerHTML.indexOf('<') != 0) {
+                        line.innerHTML = '<p>' + line.innerHTML + '</p>';
+                    }
+
+                    filterLines.push(line);
+                }
+            });
+
+            Array.prototype.forEach.call(filterLines, function (line) {
+                html += line.innerHTML + '\n';
+            });
+
+            html = handleExtPattern(html, ext_span_pattern, ext_span_replace);
+            html = handleExtPattern(html, ext_h1_pattern, ext_h1_replace);
+
+            document.body.innerHTML = html;
+
+        });
+    </script>
+</head>
+
+<body>
+
+    <head>
+        <link rel="STYLESHEET" type="text/css" href="http://www.truefriend.com/tfcommon/css//edit_old.css">
+    </head>
+    <table border="0" cellpadding="3" cellspacing="1" width="100%">
+        <tbody>
+            <tr>
+                <td align="left" width="720">
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>뱅키스 신용/대출 약정계좌 중 담보부족 발생 계좌의 추가담보 통보방법을 아래와 같이 변경하오니 계좌관리에 참고하시기 바랍니다.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h1>
+                        <strong>뱅키스 신용/대출 약정계좌 중 담보부족 발생계좌의 통보방법 변경 안내 </strong>
+                    </h1>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h2><strong>시행일</strong> <strong>: 2020년 8월 31일(월)</strong></h2>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h2><strong>변경사항 </strong></h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table align="left" border="1" bordercolor="#e3d3c6" cellpadding="0" cellspacing="0" id="Head_yes1"
+                        rules="all" style="width: 100%; text-align: left">
+                        <caption style="height: 0px; width: 0px; text-indent: -99999px">
+                            ㈜
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th height="26" scope="col" style="text-align: center" width="14%">
+                                    <strong>매체</strong>
+                                </th>
+                                <th scope="col" style="text-align: center" width="86%">
+                                    <strong>메뉴</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th height="41" scope="row" style="text-align: center"><strong>1일차</strong></th>
+                                <td class="c" style="text-align: left">
+                                    <p align="left">- 현행 : 신용/대출 약정시 신청한 추가담보 통보방법 (고객센터 직원의 유선 안내 없음)<br>
+                                        - <strong>변경後</strong> : &lt;신용/대출 약정시 신청한 추가담보 통보방법&gt;과 &lt;온라인 채널 팝업공지&gt;
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th height="41" scope="row" style="text-align: center"><strong>2일차</strong></th>
+                                <td class="c" style="text-align: left">
+                                    <p align="left">- 현행 : 신용/대출약정시 신청한 추가담보 통보방법과 고객센터 직원의 유선 안내<br>
+                                        - <strong>변경後 :</strong> &lt;신용/대출 약정시 신청한 추가담보 통보방법&gt;과 &lt;온라인 채널
+                                        팝업공지&gt;<br>
+                                        <span style="color: #00F">☞ 2020년 8월 31일부터 고객센터 직원의 담보부족 통보 유선 안내 없음</span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>온라인 채널(홈페이지, HTS, 스마트폰)에 로그인한 ID기준으로 담보부족 발생계좌 리스트와 담보현황 공지
+                    </h3>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>궁금하신 사항은 고객센터(☎ 1544-5000, 1588-0012)로 문의하여 주시기 바랍니다.
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>※ 매매 관련 주요 고지사항 수신을 위해, 개인정보가 변경된 고객님은 당사 고객센터 또는 온라인 매체를 통해 개인정보를 변경하여 주시기 바랍니다 </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    &nbsp;<map name="Map"><area coords="4,64,631,109"
+            href="https://www.truefriend.com/main/banking/opensubsc/PubSubscInfo.jsp" shape="RECT"
+            target="_parent" /></map>&nbsp;
+</body>
+
+</html>
