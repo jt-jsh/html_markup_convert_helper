@@ -85,6 +85,10 @@
                 var ext_strong_replace = '';
                 var ext_sup_pattern = /<(\/sup|sup)([^>]*)>/gi;
                 var ext_sup_replace = '';
+                var ext_h3_pattern = /h3>/gi;
+                var ext_h3_replace = 'h4>';
+                var ext_h2_pattern = /h2>/gi;
+                var ext_h2_replace = 'h3>';
                 var ext_h1_pattern = /h1>/gi;
                 var ext_h1_replace = 'h2>';
 
@@ -174,6 +178,8 @@
 
                 html = handleExtPattern(html, ext_span_pattern, ext_span_replace);
                 html = handleExtPattern(html, ext_sup_pattern, ext_sup_replace);
+                html = handleExtPattern(html, ext_h3_pattern, ext_h3_replace);
+                html = handleExtPattern(html, ext_h2_pattern, ext_h2_replace);
                 html = handleExtPattern(html, ext_h1_pattern, ext_h1_replace);
 
                 result.innerHTML = html;
