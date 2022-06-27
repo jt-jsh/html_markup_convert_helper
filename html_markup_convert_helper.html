@@ -76,12 +76,15 @@
                 var h1s = content.getElementsByTagName('h1');
                 var h2s = content.getElementsByTagName('h2');
                 var h3s = content.getElementsByTagName('h3');
+                var images = convert.getElementsByTagName('img');
 
                 // extract pattern
                 var ext_span_pattern = /<(\/span|span)([^>]*)>/gi;
                 var ext_span_replace = '';
                 var ext_strong_pattern = /<(\/strong|strong)([^>]*)>/gi;
                 var ext_strong_replace = '';
+                var ext_sup_pattern = /<(\/sup|sup)([^>]*)>/gi;
+                var ext_sup_replace = '';
                 var ext_h1_pattern = /h1>/gi;
                 var ext_h1_replace = 'h2>';
 
@@ -113,6 +116,7 @@
                 handlePushElements(h1s);
                 handlePushElements(h2s);
                 handlePushElements(h3s);
+                handlePushElements(images);
 
                 // tag inline trim
                 handleTitleTrim(paragraphs);
@@ -169,6 +173,7 @@
                 });
 
                 html = handleExtPattern(html, ext_span_pattern, ext_span_replace);
+                html = handleExtPattern(html, ext_sup_pattern, ext_sup_replace);
                 html = handleExtPattern(html, ext_h1_pattern, ext_h1_replace);
 
                 result.innerHTML = html;
