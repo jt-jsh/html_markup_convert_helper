@@ -42,10 +42,14 @@
             'cellpadding',
             'cellspacing',
             'rules',
+            'bgcolor',
 
             'font',
             'align',
             'color',
+            'valign',
+
+            'text-align:',
         ]
 
         function HandleConvertHtml() {
@@ -77,6 +81,7 @@
                 var h2s = content.getElementsByTagName('h2');
                 var h3s = content.getElementsByTagName('h3');
                 var images = convert.getElementsByTagName('img');
+                var divs = convert.getElementsByTagName('div');
 
                 // extract pattern
                 var ext_span_pattern = /<(\/span|span)([^>]*)>/gi;
@@ -121,6 +126,7 @@
                 handlePushElements(h2s);
                 handlePushElements(h3s);
                 handlePushElements(images);
+                handlePushElements(divs);
 
                 // tag inline trim
                 handleTitleTrim(paragraphs);
