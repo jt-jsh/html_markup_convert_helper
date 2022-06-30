@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        File    : html_markup_convert_helper.html
+        Autor   : STUDIO-JT (JSH)
+        Create  : 2022-06-26
+    -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +15,19 @@
     <style>
         * { margin:0; padding:0; box-sizing: border-box; }
 
+        ol, ul { list-style: none; }
+        li {  padding-left: 1rem; position: relative; word-break: keep-all; }
+        ul > li:before { content:""; display: block; width: 0.3rem; height: 0.3rem; background: #bbb; position: absolute; top:0.5rem; left:0; }
+        ol { counter-reset: list; }
+        ol > li:before {counter-increment: list; content:counter(list)'.'; position: absolute; top:0; left:0; }
+
         .wrap {max-width: 800px; padding:20px;}
+
+        #convert_readme { font-size:14px; line-height: 1.5; padding-bottom: 30px; }
 
         #convert_html { margin-bottom:20px; }
         #convert_html > textarea {width:100%; height:350px; resize: none; padding:20px;}
-        #convert_html > div {
-            overflow: hidden;
-            width: 0;
-            height: 0;
-            opacity: 0;
-            position: absolute;
-            left: -9999px;
-        }
+        #convert_html > div { overflow: hidden; width: 0; height: 0;opacity: 0; position: absolute; left: -9999px; }
         #convert_submit { text-align: center; margin-bottom: 20px;}
         #convert_submit button { width:100%; height:30px; vertical-align: top;}
 
@@ -29,6 +35,7 @@
     </style>
 
     <script>
+        // 제거해야할 속성들 지정
         var attrs = [
             'class',
             'id',
@@ -57,19 +64,23 @@
             var convert = document.querySelector('#convert_html > div');
             var result = document.querySelector('#result_html');
 
-            // reset
+            // 변환을 위해 elemenet에 textarea 값 삽입
             convert.innerHTML = textarea.value;
 
             function init() {
                 // variables
                 var elements = [];
 
+                // 불필요하다고 판단되는 link 태그 제거
                 var link = convert.getElementsByTagName('link')[0];
                 if (link) link.remove();
 
+                // 콘텐츠를 감싸고있는 부모 table | tag 선택
                 var content = convert.getElementsByTagName('table')[0] || convert.children[0];
+                // 필요 여부를 알 수 없는 map element 선택
                 var map = convert.getElementsByTagName('map')[0];
 
+                // 치환에 필요한 태그들 노드배열로 정의
                 var tables = content.getElementsByTagName('table');
                 var ths = content.getElementsByTagName('th');
                 var tds = content.getElementsByTagName('td');
@@ -83,7 +94,7 @@
                 var images = convert.getElementsByTagName('img');
                 var divs = convert.getElementsByTagName('div');
 
-                // extract pattern
+                // 정규식 정의
                 var ext_span_pattern = /<(\/span|span)([^>]*)>/gi;
                 var ext_span_replace = '';
                 var ext_strong_pattern = /<(\/strong|strong)([^>]*)>/gi;
@@ -114,7 +125,7 @@
                     return html.replace(pattern, replace);
                 }
 
-                // init 
+                // 포함할 노드배열들 array에 push
                 handlePushElements(tables);
                 handlePushElements(ths);
                 handlePushElements(tds);
@@ -128,19 +139,20 @@
                 handlePushElements(images);
                 handlePushElements(divs);
 
-                // tag inline trim
+                // 앞 뒤 공백 제거
                 handleTitleTrim(paragraphs);
                 handleTitleTrim(h1s);
                 handleTitleTrim(h2s);
                 handleTitleTrim(h3s);
 
-                // delete attribute
+                // 속성 제고 반복문
                 Array.prototype.forEach.call(elements, function (element) {
                     Array.prototype.forEach.call(attrs, function (attr) {
 
+                        // 태그 속 속성들 제거
                         element.removeAttribute(attr);
 
-                        // delete title tag (h1, h2, h3) inline strong tag
+                        // 제목 태그 속 strong 태그 제거
                         if (
                             element.tagName == 'H1'
                             || element.tagName == 'H2'
@@ -151,7 +163,7 @@
                     });
                 });
 
-                // delete table caption tag
+                // 불필요한 caption 태그 제거
                 Array.prototype.forEach.call(tables, function (table) {
                     var captions = table.getElementsByTagName('caption');
                     if (captions.length > 0) {
@@ -161,7 +173,7 @@
                     }
                 });
 
-                // line clean up
+                // table태그 속 tr/td라인 p태그로 치환
                 var lines = convert.querySelectorAll('#convert_html > div > table > tbody > tr > td');
                 var filterLines = [];
                 var html = '';
@@ -178,10 +190,12 @@
                     }
                 });
 
+                // 치환한 라인 html 마크업
                 Array.prototype.forEach.call(filterLines, function (line) {
                     html += line.innerHTML + '\n';
                 });
 
+                // 마지막으로 정규식 치환
                 html = handleExtPattern(html, ext_span_pattern, ext_span_replace);
                 html = handleExtPattern(html, ext_sup_pattern, ext_sup_replace);
                 html = handleExtPattern(html, ext_h3_pattern, ext_h3_replace);
@@ -196,10 +210,12 @@
                 
             }
             
+            // 초기화 실행
             init();
 
         }
 
+        // html 복사
         function handleCopyHtml(){
             var textarea = document.createElement('textarea');
             
@@ -216,6 +232,17 @@
 
 <body>
     <div class="wrap">
+        <div id="convert_readme">
+            <ul>
+                <li>한국투자증권 모바일웹 구축 과정에서 기존의 다량의 공지사항 개시물들을 수동으로 마크업을 수정하여 등록해야하는 업무를 진행했습니다.</li>
+                <li>기존의 게시물은 table로 구성된 옛날 방식의 마크업이었습니다.</li>
+                <li>전부는 아니지만 공통적으로 수정해야할 영역이 많았습니다.</li>
+                <li>집중도가 높고 반복되는 작업이다보니 피로도가 높았고 좀 더 편하게 작업할 방법을 생각하여 만들게된 html markup 변환기입니다.</li>
+                <li>치환이 필요한 태그, 속성들을 배열에 추가하여 커스텀으로 치환합니다.</li>
+                <li>이런 형태로 대량의 작업이 필요한 경우, 이러한 방식으로 업무 효율을 높힐 수 있을 것 같습니다.</li>
+            </ul>
+        </div>
+
         <div id="convert_html">
             <textarea></textarea>
             <div>
